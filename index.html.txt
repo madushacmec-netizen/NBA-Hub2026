@@ -1,0 +1,876 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="google-site-verification" content="JdBQ6-CJgfwfnfiARloilLImgBB9fHQTNSRs9F3mKUk" />
+<title>NBA Hub 2026 - Official Hub & Firebase Member Portal</title>
+<meta name="google-site-verification" content="M6hXL-2ApcqZEd_Rqv_rIvcO62gTeU_LUJmOXgXob8k" />
+<meta name="description" content="NBA Hub 2026 with real-time news, player rosters, arenas & maps, merchandise store, multi-language support, and Firebase Authentication." />
+<meta property="og:title" content="NBA Hub 2026 - Official Hub & Firebase Member Portal" />
+<meta property="og:description" content="NBA Hub 2026 with real-time news, player rosters, arenas & maps, merchandise store, multi-language support, and Firebase Authentication." />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+<!-- Top Navigation Bar -->
+<nav class="navbar">
+<div class="logo-wrapper">
+<span class="logo-badge">NBA 2026</span>
+<a href="#content" class="logo">NBA HUB</a>
+</div>
+
+<ul class="nav-links">
+<li><a href="#todayNewsSection">Today's News</a></li>
+<li><a href="#liveChatSection">💬 Live Chat</a></li>
+<li><a href="#communityPostsSection">🏀 Community &amp; Questions</a></li>
+<li><a href="#playersSection">Players &amp; Legends</a></li>
+<li><a href="#teamsSection">Teams</a></li>
+<li><a href="#arenasSection">Arenas</a></li>
+<li><a href="#storeSection">Store</a></li>
+<li id="navAdminLink" style="display: none;"><a href="#adminPanelSection" style="color: #ffd700; font-weight: 700;">👑 Dev Admin</a></li>
+<li id="navJsonLink" style="display: none;"><a href="#jsonManagerSection" style="color: #00d9ff;">📂 JSON Config</a></li>
+</ul>
+
+<div class="nav-controls">
+<button id="openConfigBtn" class="btn-secondary" title="Configure your Firebase Project credentials" style="font-size: 13px; padding: 6px 12px; display: none;">
+⚙️ Firebase Setup
+</button>
+</div>
+</nav>
+
+<!-- Main Header -->
+<header>
+<div class="header-banner">
+<h1 id="mainTitle">NBA Hub 2026</h1>
+<h1 id="mainTitle">By Ranaweera</h1>
+<p id="factPara">Current NBA Fact: <span id="nbaFact" style="color: #00d9ff; font-weight: 600;">The NBA was founded in 1946 as the Basketball Association of America (BAA).</span></p>
+<p id="currentTime" style="margin-top: 8px; font-weight: 500;"></p>
+<div id="adminAnnouncementBanner" style="display: none; margin: 10px auto 0; max-width: 820px; padding: 8px 14px; background: rgba(234, 179, 8, 0.15); border: 1px solid #eab308; border-radius: 8px; color: #fef08a; font-size: 14px; font-weight: 500;"></div>
+</div>
+
+<!-- Authentication Section -->
+<div id="auth">
+<div class="auth-header-bar">
+<h3>
+<span>🏀</span> NBA Member Authentication
+</h3>
+<div style="display: flex; align-items: center; gap: 8px;">
+<span id="adminSessionBadge" class="auth-mode-badge" style="display: none; background: rgba(234, 179, 8, 0.2); color: #ffd700; border: 1px solid #ffd700;">👑 Lead Dev &amp; Admin</span>
+<span id="authModeIndicator" class="auth-mode-badge demo">⚡ Instant Sandbox Mode</span>
+<span id="authStatusBadge" class="auth-status-badge">○ Guest Mode</span>
+</div>
+</div>
+
+<!-- 1. SIGN IN FORM -->
+<div id="loginForm">
+<div class="auth-form-row">
+<input id="username" type="email" placeholder="Email address (e.g. fan@nba.com)" autocomplete="email" style="width: 260px;" />
+
+<div class="input-with-toggle">
+<input id="password" type="password" placeholder="Password" autocomplete="current-password" style="width: 150px;" />
+<label class="toggle-label" for="showPasswordSignIn">
+<input type="checkbox" id="showPasswordSignIn" /> Show
+</label>
+</div>
+
+<button id="signInBtn" type="button">
+🔑 Sign In
+</button>
+<button id="showRegisterBtn" type="button" class="btn-secondary">
+✨ Register
+</button>
+<button id="forgotPasswordBtn" type="button" class="btn-secondary">
+❓ Forgot Password
+</button>
+</div>
+</div>
+
+<!-- 2. REGISTER FORM WITH AGE, SAFETY & BOT VERIFICATION -->
+<div id="registerForm" style="display: none;">
+<div class="auth-form-row">
+<input id="regUsername" type="text" placeholder="Display Name (e.g. Kobe Fan)" style="width: 170px;" />
+<input id="regEmail" type="email" placeholder="Email address" autocomplete="email" style="width: 200px;" />
+
+<div class="input-with-toggle">
+<input id="regPassword" type="password" placeholder="Password (min 6 chars)" autocomplete="new-password" style="width: 150px;" />
+<label class="toggle-label" for="showPasswordReg">
+<input type="checkbox" id="showPasswordReg" /> Show
+</label>
+</div>
+
+<div class="input-with-toggle">
+<input id="regConfirmPassword" type="password" placeholder="Confirm Password" autocomplete="new-password" style="width: 150px;" />
+<label class="toggle-label" for="showConfirmPasswordReg">
+<input type="checkbox" id="showConfirmPasswordReg" /> Show
+</label>
+</div>
+
+<button id="registerBtn" type="button">
+Create Account
+</button>
+<button id="cancelRegisterBtn" type="button" class="btn-secondary">
+Back to Sign In
+</button>
+</div>
+
+<!-- Verifications Bar (Age, Safety Oath & Anti-Bot Security Check) -->
+<div class="register-verification-bar" style="margin-top: 10px; display: flex; flex-wrap: wrap; gap: 14px; background: rgba(15, 18, 38, 0.8); border: 1px solid var(--border-color); padding: 10px 14px; border-radius: 8px;">
+<label style="font-size: 12px; color: #cbd5e1; display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
+<input type="checkbox" id="regAgeVerification" checked />
+🔞 <strong>Age Verification:</strong> I confirm I am 13+ years old
+</label>
+<label style="font-size: 12px; color: #cbd5e1; display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
+<input type="checkbox" id="regSafetyOath" checked />
+🛡️ <strong>Safety Oath:</strong> Zero hate-speech, fair fan debate
+</label>
+<div style="font-size: 12px; color: #cbd5e1; display: inline-flex; align-items: center; gap: 6px;">
+<span>🤖 <strong>Bot Check:</strong></span>
+<span id="regCaptchaQuestion" style="color: #00d9ff; font-weight: 700;">4 + 3 = ?</span>
+<input id="regCaptchaAnswer" type="number" placeholder="Answer" style="width: 70px; padding: 2px 6px; font-size: 12px; background: #070913; border: 1px solid var(--border-color); color: #fff; border-radius: 4px;" />
+</div>
+</div>
+</div>
+
+<!-- 3. CONNECTED MEMBER PROFILE (EDITABLE) -->
+<div id="profile" style="display: none;">
+<div class="profile-card-inner">
+<div class="profile-info-group">
+<div id="profileAvatar" class="profile-avatar" title="Member Avatar">N</div>
+<div class="profile-details">
+<h4>Welcome, <span id="userName" style="color: #00d9ff;">NBA Fan</span>!</h4>
+<p><strong>Account Email:</strong> <span id="userEmail"></span></p>
+<div id="profileMetaRow" class="profile-meta-row">
+<span id="devAdminProfileBadge" class="fan-badge" style="display: none; background: rgba(234, 179, 8, 0.2); color: #ffd700; border-color: #ffd700;">👑 Dev &amp; Admin</span>
+<span id="userFavTeamBadge" class="fan-badge">🛡️ Team: All-NBA</span>
+<span id="userSafetyVerifiedBadge" class="fan-badge" style="background: rgba(34, 197, 94, 0.15); color: #4ade80; border-color: rgba(34, 197, 94, 0.4);">✓ 13+ &amp; Safety Verified</span>
+<span id="emailVerificationStatus" class="verification-tag unverified">
+⚠ Email Not Verified
+</span>
+</div>
+<p id="userBioText" class="user-bio-text">"Official NBA Fan &amp; League Member"</p>
+</div>
+</div>
+
+<div class="profile-actions">
+<button id="editProfileBtn" type="button" class="btn-primary" style="background: linear-gradient(135deg, #00d9ff, #0284c7); color: #040814; font-weight: 700;">
+✏️ Edit Profile
+</button>
+<button id="resendVerificationBtn" type="button" class="btn-secondary">
+✉️ Resend Verification Email
+</button>
+<button id="signOutBtn" type="button" class="btn-danger">
+🚪 Sign Out
+</button>
+</div>
+</div>
+
+<!-- Profile Editor (Collapsible Inline Form) -->
+<div id="editProfileForm" class="edit-profile-card" style="display: none;">
+<div class="edit-profile-header">
+<h4 style="margin: 0; color: #00d9ff; font-family: 'Orbitron', monospace; font-size: 15px;">✏️ Update Member Profile</h4>
+<span style="font-size: 12px; color: #9aa3be;">Changes sync with your account</span>
+</div>
+
+<div id="profileUpdateMsg" style="display: none;"></div>
+
+<div class="edit-profile-grid">
+<div class="form-group">
+<label for="editDisplayName">Display Name / Nickname</label>
+<input id="editDisplayName" type="text" placeholder="e.g. Stephen Curry Fan" />
+</div>
+
+<div class="form-group">
+<label for="editFavTeam">Favorite NBA Team</label>
+<select id="editFavTeam">
+<option value="All-NBA / League Fan">All-NBA / League Fan</option>
+<option value="Boston Celtics">Boston Celtics</option>
+<option value="Los Angeles Lakers">Los Angeles Lakers</option>
+<option value="Golden State Warriors">Golden State Warriors</option>
+<option value="Milwaukee Bucks">Milwaukee Bucks</option>
+<option value="Denver Nuggets">Denver Nuggets</option>
+<option value="Dallas Mavericks">Dallas Mavericks</option>
+<option value="New York Knicks">New York Knicks</option>
+<option value="Miami Heat">Miami Heat</option>
+<option value="Phoenix Suns">Phoenix Suns</option>
+<option value="Philadelphia 76ers">Philadelphia 76ers</option>
+<option value="Chicago Bulls">Chicago Bulls</option>
+<option value="San Antonio Spurs">San Antonio Spurs</option>
+<option value="Oklahoma City Thunder">Oklahoma City Thunder</option>
+<option value="Cleveland Cavaliers">Cleveland Cavaliers</option>
+<option value="Minnesota Timberwolves">Minnesota Timberwolves</option>
+<option value="Houston Rockets">Houston Rockets</option>
+<option value="Indiana Pacers">Indiana Pacers</option>
+<option value="Sacramento Kings">Sacramento Kings</option>
+<option value="Orlando Magic">Orlando Magic</option>
+<option value="LA Clippers">LA Clippers</option>
+</select>
+</div>
+
+<div class="form-group">
+<label for="editPhotoUrl">Avatar Image URL</label>
+<input id="editPhotoUrl" type="url" placeholder="https://.../avatar.jpg" />
+</div>
+
+<div class="form-group">
+<label for="avatarUploadInput">Or Upload Avatar from Device</label>
+<input id="avatarUploadInput" type="file" accept="image/*" class="file-uploader-small" />
+</div>
+
+<div class="form-group form-group-full">
+<label for="editBio">Fan Bio &amp; Motto</label>
+<input id="editBio" type="text" placeholder="e.g. Lifetime Celtics fan. Watching every game from section 12." />
+</div>
+</div>
+
+<!-- Quick Avatar Presets -->
+<div class="preset-section">
+<span class="preset-label">Quick Avatar Icons:</span>
+<div class="preset-avatars-row">
+<button type="button" class="preset-avatar-btn" data-avatar="🏀" title="Basketball">🏀</button>
+<button type="button" class="preset-avatar-btn" data-avatar="🏆" title="Championship Trophy">🏆</button>
+<button type="button" class="preset-avatar-btn" data-avatar="🔥" title="On Fire">🔥</button>
+<button type="button" class="preset-avatar-btn" data-avatar="👑" title="King">👑</button>
+<button type="button" class="preset-avatar-btn" data-avatar="⚡" title="Lightning">⚡</button>
+<button type="button" class="preset-avatar-btn" data-avatar="⭐" title="All-Star">⭐</button>
+<button type="button" class="preset-avatar-btn" data-avatar="🎯" title="Sharp Shooter">🎯</button>
+<button type="button" class="preset-avatar-btn" data-avatar="🦁" title="Beast">🦁</button>
+</div>
+</div>
+
+<div class="edit-profile-actions">
+<button id="saveProfileBtn" type="button" class="btn-primary" style="background: linear-gradient(135deg, #00d9ff, #0284c7); color: #050b14;">
+💾 Save Profile Changes
+</button>
+<button id="cancelEditProfileBtn" type="button" class="btn-secondary">
+Cancel
+</button>
+</div>
+</div>
+</div>
+
+<!-- Auth Feedback Message -->
+<div id="authMessage"></div>
+</div>
+
+<!-- Search & Preferences Controls -->
+<div class="search-container">
+<input id="searchInput" type="text" placeholder="Search teams, players, arenas, or news..." />
+<button id="searchBtn" type="button">🔍 Search</button>
+</div>
+<div id="searchResults" style="display: none;"></div>
+
+<div class="controls-container">
+<div class="control-item">
+<label id="timeZoneLabel" for="timeZoneSelect">Select Time Zone:</label>
+<select id="timeZoneSelect">
+<option value="America/New_York">US Eastern Time (ET)</option>
+<option value="America/Chicago">US Central Time (CT)</option>
+<option value="America/Denver">US Mountain Time (MT)</option>
+<option value="America/Los_Angeles" selected>US Pacific Time (PT)</option>
+<option value="America/Mexico_City">Mexico City Time</option>
+<option value="America/Sao_Paulo">Brazil Time (BRT)</option>
+<option value="Europe/London">UK Time (GMT/BST)</option>
+<option value="Europe/Paris">France Time (CET)</option>
+<option value="Europe/Berlin">Germany Time (CET)</option>
+<option value="Europe/Moscow">Russia Time (MSK)</option>
+<option value="Africa/Cairo">Egypt Time</option>
+<option value="Africa/Johannesburg">South Africa Time</option>
+<option value="Asia/Dubai">UAE Time (GST)</option>
+<option value="Asia/Kolkata">India Time (IST)</option>
+<option value="Asia/Colombo">Sri Lanka Time (IST)</option>
+<option value="Asia/Shanghai">China Time (CST)</option>
+<option value="Asia/Tokyo">Japan Time (JST)</option>
+<option value="Asia/Seoul">South Korea Time (KST)</option>
+<option value="Australia/Sydney">Australia Time (AEST)</option>
+<option value="Pacific/Auckland">New Zealand Time (NZST)</option>
+<option value="UTC">UTC (Universal)</option>
+</select>
+</div>
+
+<div class="control-item">
+<label id="languageLabel" for="languageSelect">Select Language:</label>
+<select id="languageSelect">
+<option value="en" selected>English</option>
+<option value="es">Español</option>
+<option value="fr">Français</option>
+<option value="de">Deutsch</option>
+<option value="pt">Português</option>
+<option value="ja">日本語</option>
+<option value="si">සිංහල</option>
+</select>
+</div>
+</div>
+</header>
+
+<!-- Main Container Layout -->
+<div id="container">
+<!-- Sidebar Quick Links -->
+<aside id="sidebar">
+<h3>Contents Navigation</h3>
+<ul>
+<li><a href="#todayNewsSection">⚡ Today's Headlines</a></li>
+<li><a href="#liveChatSection">💬 Live Fan Chat</a></li>
+<li><a href="#communityPostsSection">🏀 Community &amp; Questions</a></li>
+<li><a href="#playersSection">⭐ Players Directory</a></li>
+<li><a href="#newsSection">📰 League News</a></li>
+<li><a href="#teamsSection">🛡️ 30 NBA Teams</a></li>
+<li><a href="#arenasSection">🏟️ Arenas &amp; Directions</a></li>
+<li><a href="#storeSection">🛍️ NBA Store</a></li>
+<li><a href="#safetyVerificationSection">🛡️ Safety &amp; Age Rules</a></li>
+<li><a href="#contactsSection">📞 HQ &amp; Help Center</a></li>
+<li id="sidebarAdminLink" style="display: none;"><a href="#adminPanelSection" style="color: #ffd700; font-weight: 700;">👑 Dev Admin Panel</a></li>
+<li id="sidebarJsonManagerLink" style="display: none;"><a href="#jsonManagerSection" style="color: #00d9ff;">📂 JSON Manager</a></li>
+</ul>
+</aside>
+
+<!-- Main Body Content -->
+<main id="content">
+<!-- 1. Today's Headlines -->
+<details id="todayNewsSection" open>
+<summary>
+<span id="todayNewsTitle">Today's NBA News (2026)</span>
+<span>▼</span>
+</summary>
+<div class="section-body">
+<ul id="todayNewsList" class="cards-list"></ul>
+</div>
+</details>
+
+<!-- 2. Live Fan Arena Chat -->
+<details id="liveChatSection" open>
+<summary>
+<span>💬 Live Fan Arena Chat &amp; Real-Time Game Room</span>
+<span>▼</span>
+</summary>
+<div class="section-body">
+<div class="live-chat-card">
+<div class="live-chat-header">
+<div>
+<h4 style="margin: 0; color: #00d9ff; font-size: 15px;">🏀 Courtside Live Fan Chat Room</h4>
+<p style="margin: 2px 0 0; font-size: 13px; color: #9aa3be;">Active live discussions on games, trades, and highlights with verified fans.</p>
+</div>
+<div style="display: flex; align-items: center; gap: 8px;">
+<span class="live-indicator">● LIVE CHAT</span>
+<button id="clearChatAdminBtn" type="button" class="btn-danger" style="display: none; padding: 4px 10px; font-size: 11px;">🗑️ Clear (Admin)</button>
+</div>
+</div>
+
+<!-- Messages stream -->
+<div id="liveChatMessages" class="chat-messages-container"></div>
+
+<!-- Quick Reaction Emojis -->
+<div class="chat-emojis-bar">
+<span style="font-size: 12px; color: #9aa3be;">Reactions:</span>
+<button type="button" class="chat-quick-emoji" data-emoji="🏀">🏀</button>
+<button type="button" class="chat-quick-emoji" data-emoji="🔥">🔥</button>
+<button type="button" class="chat-quick-emoji" data-emoji="🏆">🏆</button>
+<button type="button" class="chat-quick-emoji" data-emoji="👑">👑</button>
+<button type="button" class="chat-quick-emoji" data-emoji="🐐">🐐</button>
+<button type="button" class="chat-quick-emoji" data-emoji="💥">💥</button>
+<button type="button" class="chat-quick-emoji" data-emoji="👏">👏</button>
+<button type="button" class="chat-quick-emoji" data-emoji="⚡">⚡</button>
+<button type="button" id="toggleGifPickerBtn" class="chat-quick-emoji" style="background: rgba(0, 217, 255, 0.15); border-color: #00d9ff; color: #00d9ff; font-weight: 700;" title="Insert Basketball Reaction GIF">🎞️ GIFs</button>
+<button type="button" id="triggerChatImageBtn" class="chat-quick-emoji" style="background: rgba(234, 179, 8, 0.15); border-color: #eab308; color: #facc15; font-weight: 700;" title="Upload image or GIF">📷 Upload</button>
+<input type="file" id="chatImageUpload" accept="image/*,.gif" style="display: none;" />
+</div>
+
+<!-- Collapsible Basketball GIF Reactions Drawer -->
+<div id="chatGifDrawer" class="gif-picker-drawer" style="display: none;">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+<span style="font-size: 12px; color: #00d9ff; font-weight: 700;">🏀 Basketball Reaction GIFs:</span>
+<button type="button" id="closeGifDrawerBtn" style="background: none; border: none; color: #9aa3be; cursor: pointer; font-size: 13px;">✕</button>
+</div>
+<div class="gif-grid">
+<div class="gif-item" data-gif="https://uploads.onecompiler.io/44q52vut9/457sucp7a/cat-ruffles.gif" data-title="i am eating" \>
+<img src="https://uploads.onecompiler.io/44q52vut9/457sucp7a/cat-ruffles.gif" alt="i am eating" />
+<span>i am eating</span>
+</div>
+<div class="gif-item" data-gif="https://uploads.onecompiler.io/44q52vut9/457sucp7a/scuba-cat-meme.webp" data-title="yayyy">
+<img src="https://uploads.onecompiler.io/44q52vut9/457sucp7a/scuba-cat-meme.webp" alt="yayyy" />
+<span>yayyy</span>
+</div>
+<div class="gif-item" data-gif="https://uploads.onecompiler.io/44q52vut9/457sucp7a/shocked.gif" data-title="Ohh heck nahhh">
+<img src="https://uploads.onecompiler.io/44q52vut9/457sucp7a/shocked.gif" alt="oh heck nahh" />
+<span>oh heck nah</span>
+</div>
+<div class="gif-item" data-gif="https://uploads.onecompiler.io/44q52vut9/457sucp7a/micheal-storen-my-honest-reaction.gif" data-title="Aura">
+<img src="https://uploads.onecompiler.io/44q52vut9/457sucp7a/micheal-storen-my-honest-reaction.gif" alt="aura" />
+<span>Aura</span>
+</div>
+<div class="gif-item" data-gif="https://uploads.onecompiler.io/44q52vut9/457sucp7a/if-2-humans-get-face-to-face-with-serious-expressions-get-v0-bns4f2ktmcle1.gif" data-title="What did u say?">
+<img src="https://uploads.onecompiler.io/44q52vut9/457sucp7a/if-2-humans-get-face-to-face-with-serious-expressions-get-v0-bns4f2ktmcle1.gif" alt="what did u say?" />
+<span>What did u say?</span>
+</div>
+<div class="gif-item" data-gif="https://uploads.onecompiler.io/44q52vut9/457sucp7a/king-king-baldwin.gif" data-title="I am king">
+<img src="https://uploads.onecompiler.io/44q52vut9/457sucp7a/king-king-baldwin.gif" alt="I am king" />
+<span>I am king</span>
+</div>
+<div class="gif-item" data-gif="https://uploads.onecompiler.io/44q52vut9/457sucp7a/im-out-peace-out.gif" data-title="Nahh, Im out">
+<img src="https://uploads.onecompiler.io/44q52vut9/457sucp7a/im-out-peace-out.gif" alt="Nahh, Im out" />
+<span>Nahh, Im out</span>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Selected Image/GIF Preview Bar -->
+<div id="chatSelectedImagePreviewBox" style="display: none; margin-top: 8px; align-items: center; gap: 10px; background: #070914; padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border-color);">
+<img id="chatSelectedImagePreview" src="" alt="Selected" style="height: 48px; border-radius: 6px; object-fit: cover;" />
+<span id="chatSelectedImageLabel" style="font-size: 12px; color: #cbd5e1;">Image attached to message</span>
+<button type="button" id="removeChatSelectedImageBtn" style="margin-left: auto; background: none; border: none; color: #f87171; cursor: pointer; font-size: 14px;">✕ Remove</button>
+</div>
+
+<!-- Input bar -->
+<div class="chat-input-bar">
+<input id="chatMessageInput" type="text" placeholder="Type a message (e.g. 'Curry from half-court!')..." maxlength="300" />
+<button id="sendChatBtn" type="button">💬 Send Message</button>
+</div>
+<div id="chatAuthPrompt" style="display: none; font-size: 13px; color: #fbbf24; margin-top: 6px;">
+⚠️ Please sign in above to join and send messages in the live chat.
+</div>
+</div>
+</div>
+</details>
+
+<!-- 3. Fan Community: Posts, Questions & Debates -->
+<details id="communityPostsSection" open>
+<summary>
+<span>🏀 Fan Community: Posts, Questions &amp; Debates</span>
+<span>▼</span>
+</summary>
+<div class="section-body">
+<!-- Filter Bar & Create Button -->
+<div class="community-actions-bar">
+<div class="post-filter-tags">
+<button type="button" class="filter-tag-btn active" data-filter="all">All Posts</button>
+<button type="button" class="filter-tag-btn" data-filter="question">❓ Questions</button>
+<button type="button" class="filter-tag-btn" data-filter="debate">💬 Debates</button>
+<button type="button" class="filter-tag-btn" data-filter="highlight">⚡ Highlights</button>
+<button type="button" class="filter-tag-btn" data-filter="trade">🔄 Trade Rumors</button>
+</div>
+<button id="toggleCreatePostBtn" type="button" class="btn-primary" style="background: linear-gradient(135deg, #00d9ff, #0284c7); color: #040814; font-weight: 700;">
+➕ Create Post / Ask Question
+</button>
+</div>
+
+<!-- Create Post Form (Collapsible) -->
+<div id="createPostForm" class="create-post-card" style="display: none;">
+<h4 style="margin: 0 0 12px 0; color: #00d9ff; font-family: 'Orbitron', monospace; font-size: 15px;">📝 Share Your Post or Question</h4>
+
+<div id="createPostMsg" style="display: none;"></div>
+
+<div class="create-post-grid">
+<div class="form-group">
+<label for="postTypeSelect">Post Category</label>
+<select id="postTypeSelect">
+<option value="question">❓ Question (Ask the Community)</option>
+<option value="debate">💬 Debate &amp; Discussion</option>
+<option value="highlight">⚡ Game Highlight</option>
+<option value="trade">🔄 Trade Rumors &amp; Rosters</option>
+</select>
+</div>
+
+<div class="form-group">
+<label for="postTitleInput">Post Title / Question</label>
+<input id="postTitleInput" type="text" placeholder="e.g. Can the Celtics repeat as champions in 2026?" maxlength="120" />
+</div>
+
+<div class="form-group form-group-full">
+<label for="postContentInput">Details &amp; Analysis</label>
+<textarea id="postContentInput" rows="3" placeholder="Share your thoughts, stats, or breakdown..."></textarea>
+</div>
+
+<!-- Image Upload & URL for Post -->
+<div class="form-group">
+<label for="postImageUpload">Upload Post Image or GIF</label>
+<input id="postImageUpload" type="file" accept="image/*,.gif" class="file-uploader-small" />
+</div>
+
+<div class="form-group">
+<label for="postImageUrl">Or Paste Direct Image / GIF URL</label>
+<input id="postImageUrl" type="url" placeholder="https://.../highlight.jpg" />
+</div>
+
+<!-- Post Image Preview Box -->
+<div id="postImagePreviewContainer" class="form-group form-group-full" style="display: none;">
+<label style="color: #00d9ff;">Image Attached:</label>
+<div style="position: relative; display: inline-block; max-width: 100%;">
+<img id="postImagePreview" src="" alt="Preview" style="max-height: 220px; border-radius: 8px; border: 1px solid var(--border-color); object-fit: cover;" />
+<button type="button" id="removePostImageBtn" style="position: absolute; top: 6px; right: 6px; background: rgba(0,0,0,0.75); border: 1px solid #ef4444; color: #f87171; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center;">✕</button>
+</div>
+</div>
+
+<!-- Bot Verification Challenge for Posts -->
+<div class="form-group form-group-full">
+<div class="bot-challenge-box">
+<span style="font-size: 13px; color: #cbd5e1;">🤖 <strong>Anti-Bot Security Challenge:</strong></span>
+<span id="postCaptchaQuestion" style="color: #00d9ff; font-weight: 700; font-size: 14px;">6 + 3 = ?</span>
+<input id="postCaptchaAnswer" type="number" placeholder="Enter number" style="width: 110px;" />
+<span style="font-size: 12px; color: #9aa3be;">(Anti-spam verification)</span>
+</div>
+</div>
+</div>
+
+<div class="post-form-actions">
+<button id="publishPostBtn" type="button" class="btn-primary">
+🚀 Publish to Community
+</button>
+<button id="cancelCreatePostBtn" type="button" class="btn-secondary">
+Cancel
+</button>
+</div>
+</div>
+
+<!-- List of Community Posts -->
+<div id="communityPostsList" class="community-posts-list"></div>
+</div>
+</details>
+
+<!-- 2. Players & Legends Directory -->
+<details id="playersSection" open>
+<summary>
+<span id="playersTitle">NBA Players & Legends Directory</span>
+<span>▼</span>
+</summary>
+<div class="section-body">
+<div class="player-filter-box">
+<input id="playerSearch" type="text" placeholder="Filter players by name, team, or championship..." />
+</div>
+<ul id="playersList" class="cards-list"></ul>
+</div>
+</details>
+
+<!-- 3. General NBA News -->
+<details id="newsSection">
+<summary>
+<span id="newsTitle">Latest League News & Updates</span>
+<span>▼</span>
+</summary>
+<div class="section-body">
+<ul id="generalNewsList" class="cards-list"></ul>
+</div>
+</details>
+
+<!-- 4. NBA Teams -->
+<details id="teamsSection">
+<summary>
+<span id="teamsTitle">NBA Franchise Directory (30 Teams)</span>
+<span>▼</span>
+</summary>
+<div class="section-body">
+<ul id="teamsList" class="cards-list"></ul>
+</div>
+</details>
+
+<!-- 5. Arenas & Directions -->
+<details id="arenasSection">
+<summary>
+<span id="arenasTitle">NBA Arenas & Live Directions</span>
+<span>▼</span>
+</summary>
+<div class="section-body">
+<ul id="arenasList" class="cards-list"></ul>
+</div>
+</details>
+
+<!-- 6. Store -->
+<details id="storeSection">
+<summary>
+<span id="storeTitle">Official NBA Store: Gear & Equipment</span>
+<span>▼</span>
+</summary>
+<div class="section-body">
+<div id="storeList" class="store-grid"></div>
+</div>
+</details>
+
+<!-- 7. Sponsors -->
+<details id="sponsorsSection">
+<summary>
+<span id="sponsorsTitle">Official Partners & Corporate Sponsors</span>
+<span>▼</span>
+</summary>
+<div class="section-body">
+<div class="sponsors-row">
+<div class="sponsor-box">
+<img src="https://uploads.onecompiler.io/44q52vut9/1793438980206/002-nike-logos-swoosh-white.jpg" alt="Nike Logo" onerror="this.src='https://placehold.co/140x90/111/fff?text=NIKE'" />
+<p><strong>Nike</strong><br /><small>Official Sports Partner & Apparel</small></p>
+</div>
+<div class="sponsor-box">
+<img src="https://uploads.onecompiler.io/44q52vut9/1793438971650/images%20(1).png" alt="Wilson Logo" onerror="this.src='https://placehold.co/140x90/111/fff?text=WILSON'" />
+<p><strong>Wilson</strong><br /><small>Official Game Ball Goods Partner</small></p>
+</div>
+<div class="sponsor-box">
+<img src="https://uploads.onecompiler.io/44q52vut9/1793438988068/images.png" alt="Samsung Logo" onerror="this.src='https://placehold.co/140x90/111/fff?text=SAMSUNG'" />
+<p><strong>Samsung</strong><br /><small>Official Mobile & Display Partner</small></p>
+</div>
+</div>
+</div>
+</details>
+
+<!-- 8. Contacts & Support -->
+<details id="contactsSection">
+<summary>
+<span id="contactsTitle">NBA Headquarters & Fan Relations Support</span>
+<span>▼</span>
+</summary>
+<div class="section-body">
+<div class="contact-card">
+<ul id="contactsList"></ul>
+</div>
+</div>
+</details>
+
+<!-- 9. Age & Safety Verification Hub -->
+<details id="safetyVerificationSection">
+<summary>
+<span>🛡️ Community Safety, Age Verification &amp; Fair Play Rules</span>
+<span>▼</span>
+</summary>
+<div class="section-body">
+<div class="safety-card">
+<h4 style="margin-top: 0; color: #00d9ff;">NBA Fan Fair Play &amp; Community Code</h4>
+<p style="font-size: 14px; color: #cbd5e1;">NBA Hub 2026 is committed to providing a secure, harassment-free environment for fans of all franchises.</p>
+<div class="safety-rules-grid">
+<div class="safety-rule-item">
+<h5>🔞 Age Compliance (13+)</h5>
+<p>In accordance with international online safety standards, all registered accounts must be 13 years or older.</p>
+</div>
+<div class="safety-rule-item">
+<h5>🤖 Anti-Bot Verification</h5>
+<p>All posts and registrations are secured by anti-bot verification challenges to prevent spam bots and automated scripts.</p>
+</div>
+<div class="safety-rule-item">
+<h5>🤝 Zero Harassment Policy</h5>
+<p>Passionate rivalry is encouraged, but hate speech, bullying, or abusive behavior will result in an immediate permanent ban.</p>
+</div>
+<div class="safety-rule-item">
+<h5>🔒 Developer Moderation</h5>
+<p>Active moderation is maintained by Developer Admin (<code>madusha.cmec@gmail.com</code>) with real-time audit tools.</p>
+</div>
+</div>
+</div>
+</div>
+</details>
+
+<!-- 10. Developer & System Administrator Panel (ONLY for madusha.cmec@gmail.com) -->
+<details id="adminPanelSection" style="display: none;">
+<summary style="background: linear-gradient(90deg, #3d2f07, #211905); border: 1px solid #ffd700;">
+<span style="color: #ffd700;">👑 Developer &amp; System Administrator Control Panel</span>
+<span>▼</span>
+</summary>
+<div class="section-body">
+<div class="admin-panel-card">
+<div class="admin-panel-badge-row">
+<span class="admin-shield">👑 VERIFIED LEAD DEVELOPER &amp; ADMIN: madusha.cmec@gmail.com</span>
+<span class="admin-active-status">● Full System Privileges Active</span>
+</div>
+<p style="font-size: 14px; color: #fef08a; margin: 8px 0 16px 0;">
+Exclusive dashboard for developer operations, real-time fan moderation, system diagnostics, and JSON configuration.
+</p>
+
+<!-- Metrics Row -->
+<div class="admin-metrics-row">
+<div class="admin-stat-box">
+<span class="stat-number" id="adminTotalPosts">0</span>
+<span class="stat-label">Community Posts</span>
+</div>
+<div class="admin-stat-box">
+<span class="stat-number" id="adminTotalComments">0</span>
+<span class="stat-label">Fan Comments</span>
+</div>
+<div class="admin-stat-box">
+<span class="stat-number" id="adminTotalChatMsgs">0</span>
+<span class="stat-label">Live Chat Messages</span>
+</div>
+<div class="admin-stat-box">
+<span class="stat-number" id="adminAuthMode">Active</span>
+<span class="stat-label">System Engine</span>
+</div>
+</div>
+
+<!-- Admin Broadcast Announcement -->
+<div class="admin-action-box" style="margin-top: 18px;">
+<h5 style="margin: 0 0 8px 0; color: #ffd700;">📢 Broadcast Global Developer Announcement</h5>
+<div style="display: flex; gap: 10px; flex-wrap: wrap;">
+<input id="adminBroadcastInput" type="text" placeholder="Type banner announcement (e.g. '2026 NBA Finals Stream Starting Now!')..." style="flex: 1; min-width: 260px;" />
+<button id="adminBroadcastBtn" type="button" class="btn-primary" style="background: #ffd700; color: #040814; font-weight: 700;">
+Broadcast
+</button>
+<button id="adminClearBroadcastBtn" type="button" class="btn-secondary">
+Clear Banner
+</button>
+</div>
+</div>
+
+<!-- Admin Nickname & Title Assignment Tool -->
+<div class="admin-action-box" style="margin-top: 14px;">
+<h5 style="margin: 0 0 8px 0; color: #ffd700;">🏷️ Bestow Member Nicknames &amp; Honorary Titles (Dev Only)</h5>
+<p style="font-size: 13px; color: #fef08a; margin: 0 0 10px 0;">
+As Developer Admin, you can grant custom nicknames and honorary badge titles (e.g., "The Chef", "Clutch King", "MVP Voter", "The Sniper") to any fan.
+</p>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 10px;">
+<div class="form-group">
+<label for="adminTargetUserEmail" style="color: #ffd700; font-size: 12px;">Member Email or Name</label>
+<input id="adminTargetUserEmail" type="text" placeholder="e.g. curryfan@dubnation.com" />
+</div>
+<div class="form-group">
+<label for="adminCustomNickname" style="color: #ffd700; font-size: 12px;">Custom Nickname</label>
+<input id="adminCustomNickname" type="text" placeholder="e.g. The Chef, The Professor" />
+</div>
+<div class="form-group">
+<label for="adminCustomTitleBadge" style="color: #ffd700; font-size: 12px;">Honorary Title Badge</label>
+<input id="adminCustomTitleBadge" type="text" placeholder="e.g. 🔥 MVP Voter, 🏆 Hall of Fame" />
+</div>
+</div>
+<div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+<button id="adminSaveNicknameBtn" type="button" class="btn-primary" style="background: #ffd700; color: #050811; font-weight: 700;">
+🏷️ Grant Nickname &amp; Badge
+</button>
+<span id="adminNicknameFeedback" style="font-size: 13px; color: #4ade80; display: none;"></span>
+</div>
+<div id="assignedNicknamesList" style="margin-top: 12px; font-size: 12px; color: #cbd5e1;"></div>
+</div>
+
+<!-- Admin Ban & Moderation Hub (Dev Only) -->
+<div class="admin-action-box" style="margin-top: 14px; border: 1px solid rgba(239, 68, 68, 0.4); background: rgba(30, 10, 15, 0.6);">
+<h5 style="margin: 0 0 8px 0; color: #f87171;">🚫 Community Ban &amp; Member Suspension Hub (Dev Only)</h5>
+<p style="font-size: 13px; color: #fca5a5; margin: 0 0 10px 0;">
+Exclusively for Developer Admin (<code>madusha.cmec@gmail.com</code>). Banned members are permanently blocked from signing in, publishing posts, commenting, or sending live chat messages across the entire platform.
+</p>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; margin-bottom: 10px;">
+<div class="form-group">
+<label for="adminBanUserEmail" style="color: #f87171; font-size: 12px;">Member Email or ID to Ban</label>
+<input id="adminBanUserEmail" type="text" placeholder="e.g. spammer@troll.com" />
+</div>
+<div class="form-group">
+<label for="adminBanReasonSelect" style="color: #f87171; font-size: 12px;">Reason for Ban</label>
+<select id="adminBanReasonSelect" style="background: #080a14; color: #fff; border: 1px solid var(--border-color); border-radius: 6px; padding: 8px;">
+<option value="Zero Harassment Policy Violation">Zero Harassment Policy Violation</option>
+<option value="Automated Bot / Spam Messages">Automated Bot / Spam Messages</option>
+<option value="Hate Speech / Toxic Sportsmanship">Hate Speech / Toxic Sportsmanship</option>
+<option value="Underage Account (<13)">Underage Account (&lt;13)</option>
+<option value="Admin Discretion (Dev Suspension)">Admin Discretion (Dev Suspension)</option>
+</select>
+</div>
+</div>
+<div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+<button id="adminExecuteBanBtn" type="button" class="btn-danger" style="font-weight: 700;">
+🚫 Impose Permanent Ban
+</button>
+<span id="adminBanFeedback" style="font-size: 13px; color: #4ade80; display: none;"></span>
+</div>
+<div id="bannedUsersList" style="margin-top: 14px;"></div>
+</div>
+
+<!-- Admin Moderation Actions -->
+<div class="admin-action-box" style="margin-top: 14px;">
+<h5 style="margin: 0 0 8px 0; color: #ffd700;">🛠️ System Management &amp; Quick Actions</h5>
+<div style="display: flex; gap: 10px; flex-wrap: wrap;">
+<button id="adminClearAllChatBtn" type="button" class="btn-danger">
+🗑️ Purge Live Chat Stream
+</button>
+<button id="adminSeedPostsBtn" type="button" class="btn-secondary">
+📥 Seed Default Community Posts
+</button>
+<a href="#jsonManagerSection" class="btn-primary" style="background: linear-gradient(135deg, #00d9ff, #0284c7); color: #040814; text-decoration: none; display: inline-flex; align-items: center; padding: 9px 16px; border-radius: 8px; font-weight: 600;">
+📂 Jump to JSON &amp; Config Manager
+</a>
+</div>
+</div>
+</div>
+</div>
+</details>
+
+<!-- 11. JSON Data & Firebase Uploader Section (DEVELOPER ONLY: madusha.cmec@gmail.com) -->
+<details id="jsonManagerSection" style="display: none;">
+<summary style="background: #10192e; border: 1px solid rgba(0, 217, 255, 0.4);">
+<span style="color: #00d9ff;">📂 JSON Data &amp; Firebase Configuration Manager (Dev Only)</span>
+<span>▼</span>
+</summary>
+<div class="section-body">
+<div class="json-upload-card">
+<h4 style="margin-top: 0; color: #00d9ff;">Option 1: Upload a .json File</h4>
+<p style="font-size: 14px; color: #9aa3be;">Upload your <code>firebase-config.json</code> or custom <code>nba-data.json</code> directly from your computer:</p>
+<input type="file" id="jsonFileInput" accept=".json" style="margin-bottom: 14px; background: #1e2242; padding: 8px; border-radius: 8px; width: 100%; max-width: 420px; border: 1px solid var(--border-color); color: #fff;" />
+
+<h4 style="margin: 18px 0 8px 0; color: #00d9ff;">Option 2: Paste Raw JSON</h4>
+<textarea id="jsonTextInput" class="json-area" placeholder='{\n "apiKey": "AIzaSy...",\n "projectId": "nba-hub-2026"\n}'></textarea>
+
+<div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px;">
+<button id="loadJsonBtn" type="button">Apply JSON</button>
+<button id="loadSampleFirebaseBtn" type="button" class="btn-secondary">Load Sample Firebase Config</button>
+<button id="loadSampleNbaBtn" type="button" class="btn-secondary">Load Sample NBA Data</button>
+</div>
+
+<div id="result" style="margin-top: 15px; font-size: 14px;"></div>
+
+<h5 style="margin: 18px 0 6px 0; color: #9aa3be;">JSON Loaded Preview:</h5>
+<pre id="jsonPreview" class="json-preview-box">{}</pre>
+</div>
+</div>
+</details>
+</main>
+</div>
+
+<!-- Firebase Project Credentials Modal -->
+<div id="firebaseConfigModal" class="modal-overlay" style="display: none;">
+<div class="modal-content">
+<h3>⚙️ Firebase Project Configuration</h3>
+<p style="font-size: 14px; color: #9aa3be; margin-bottom: 12px;">
+Paste your custom Firebase Project configuration below (from your Firebase Console &gt; Project Settings &gt; General &gt; Your apps).
+</p>
+<textarea id="configJsonInput" placeholder='{\n "apiKey": "AIza...",\n "authDomain": "my-project.firebaseapp.com",\n "projectId": "my-project",\n "storageBucket": "my-project.appspot.com",\n "messagingSenderId": "123...",\n "appId": "1:123..."\n}'></textarea>
+<div class="modal-buttons" style="flex-wrap: wrap;">
+<button id="switchToDemoBtn" type="button" class="btn-secondary" style="background: rgba(0, 217, 255, 0.15); color: #00d9ff; border-color: #00d9ff;">⚡ Switch to Sandbox Demo</button>
+<button id="closeConfigBtn" type="button" class="btn-secondary">Cancel</button>
+<button id="saveConfigBtn" type="button">Save Firebase Keys</button>
+</div>
+</div>
+</div>
+
+<!-- Dev Verification Questions Modal -->
+<div id="devQuestionsModal" class="modal-overlay" style="display: none;">
+<div class="modal-content">
+<h3>👑 Dev Verification</h3>
+<p style="font-size: 14px; color: #9aa3be; margin-bottom: 12px;">
+To access dev features, please answer these security questions.
+</p>
+<div class="dev-questions">
+<div class="question-item">
+<label for="devQ1">1. What is Your Favourite Type of food?</label>
+<input id="devQ1" type="text" placeholder="Enter your answer" />
+</div>
+<div class="question-item">
+<label for="devQ2">2. What is ur surname?</label>
+<input id="devQ2" type="text" placeholder="Enter your answer" />
+</div>
+<div class="question-item">
+<label for="devQ3">3. Who is ur best friend?</label>
+<input id="devQ3" type="text" placeholder="Enter your answer" />
+</div>
+</div>
+<div class="modal-buttons" style="flex-wrap: wrap;">
+<button id="closeDevQuestionsBtn" type="button" class="btn-secondary">Cancel</button>
+<button id="submitDevQuestionsBtn" type="button">Submit Answers</button>
+</div>
+</div>
+</div>
+<h6 class = "json-preview-box">Pro Handle tips that the dev(me) used and became a pro(only 1 needed it was Shooting distance) after this in my tenth month i started shooting free shots</h6>
+<iframe width="560" height="315" src="https://www.youtube.com/watch?v=x-nES0lQCGk" allowfullscreen></iframe>
+<h1 class = "json-preview-box">About dev</h1>
+<img src="https://uploads.onecompiler.io/44q52vut9/1787387892246/2bdf10b6-197b-4930-9af4-7231c5f24b21.jpg" alt="Description of the image" width="500">
+<p class = "json-preview-box">He, is, the, 11, month, pro, He never gives up also his still 11 months into basketball, he is 10 years old, his birthday is at december 31st 2016, the dev is litterlly a pro at basketball, and his dream is to join the NBA by going to LA and going to a good school and etc.</p>
+
+<!-- Footer -->
+<footer>
+<p>&copy; 2026 NBA Hub 2026. Official Fan & Information Resource. Designed with Firebase Authentication.</p>
+</footer>
+
+<!-- App Scripts (ES Module) -->
+<script type="module" src="/script.js"></script>
+
+</body>
+</html>
